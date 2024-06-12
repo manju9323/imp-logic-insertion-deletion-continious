@@ -1,0 +1,188 @@
+ del = " $ $ $ $ $";
+ ins = " $ $ $ $ $";
+ //$ $ $ $ $ $-$ $ x$ $ $ $-$ $ $ $ $ $-$ 
+
+ Paragraph = "The synthesis process of FMOMOF, resulting in a PC with a completely different shape than FMOFC, also had a significant impact on the SSA and the porosity (Fig.  REF F3 \h \* MERGEFORMAT 2C). BET results showed that the SSA of FMOMOF3.3 at 8.9  m2/g was 3.6 times higher than the SSA of FMOFC. The total pore volume and average pore diameter of FMOMOF3.3 were 0.042  cm3/g and 18.9  nm, respectively. In comparison, FMOFC exhibited smaller pores with an average diameter of 14.1  nm and a total pore volume of only 0.015  cm3/g. For pollutant degradation, larger SSA and pore volume benefit both adsorption and photocatalytic processes by increasing the number of surficial active sites and reducing photocharge transport distances in the PC, thus accelerating the generation of reactive radicals [64]. Based on these observations, the multilayered collapsed morphology of FMOMOF appears to be more suitable for organic pollutant removal than FMOFC.";
+
+
+// del = "2$3$3";
+// ins = "2$1";
+
+// Paragraph = "1212323";
+
+// ins = ":$:10";
+// del = "https://$.org/$.10";
+
+// Paragraph = " [82] S. Jiang, Q. Hu, M. Xu, S. Hu, X.-C. Shi, R. Ding, P.-L. Tremblay, T. Zhang, Crystalline CdS/MoS2 shape-controlled by a bacterial cellulose scaffold for enhanced photocatalytic hydrogen evolution, Carbohydr.org/: Polym. 250 (2020) 116909. https://doi.org/:10.1016/j.carbpol.2020.116909";
+
+// ins = "Tremblay$a,b,c,*$, Tian Zhang$a,b,c,d,e,** $tzhang@whut.edu.cn$";
+
+// del = "*Corresponding authors: $ HYPERLINK \"mailto:tzhang@whut.edu.cn\" $tzhang@whut.edu.cn$,$";
+// Paragraph = "*Corresponding authors:  HYPERLINK \"mailto:tzhang@whut.edu.cn\" tzhang@whut.edu.cn,Tremblaya,b,c,* pierluct@whut.edu.cn, Tian Zhanga,b,c,d,e,** tzhang@whut.edu.cn";
+
+splitedIns = ins.split("$");
+splitedDel = del.split("$");
+dupDel = [];
+dupIns = [];
+//console.log(splitedDel);
+
+//console.log(splitedIns);
+
+//first we check deletion
+//answer
+longdellength = [];
+longInslength = [];
+// find del range
+delrange =[];
+insRange = [];
+
+//------------------------------------------------------------------------------------------------------------------------
+for(let i = 0; i < splitedDel.length; i++){
+    chk = splitedDel[i];
+    chklength = "";
+    if(dupDel[i] != -1){
+        if(chk.includes(Paragraph))
+        {
+            chklength = chk.length;
+        }
+    innchk = "";
+    for(let j = i; j < splitedDel.length;j++){
+      innchk += splitedDel[j];
+      //console.log(innchk,"innschk")
+      if(Paragraph.includes(innchk)){
+         //  console.log("aama")
+          if(innchk.length >= chklength){
+          //    console.log("yyy")
+              chk = innchk;
+              dupDel[j] = -1;
+          }
+      }
+      
+    }
+    if(Paragraph.indexOf(chk) != -1){
+        
+        console.log("yes" ,Paragraph.indexOf(chk))
+         delrange.push(Paragraph.indexOf(chk)+chk.length);
+       //  if(chk.length == 1);
+        //  let arr = ["1","2","3","4","5","6","7","8","9","0","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","!","@","#","$","%","^","&","*","(",")","_","-","+","=","`","~","{","}",":",";","'","\"","?",">",".","<",",","+","/","*","."];
+}
+    else{
+         delrange.push(-1);
+    }
+    
+     longdellength.push(chk)
+    }
+}
+console.log(longdellength)
+//console.log(dupDel);
+console.log(delrange);
+
+//--------------------------------------------------------------------------------------------------
+
+
+for(let i = 0; i < splitedIns.length; i++){
+    chk = splitedIns[i];
+    chklength = "";
+    if(dupIns[i] != -1){
+        if(chk.includes(Paragraph))
+        {
+            chklength = chk.length;
+        }
+    innchk = "";
+    for(let j = i; j < splitedIns.length;j++){
+      innchk += splitedIns[j];
+      //console.log(innchk,"innschk")
+      if(Paragraph.includes(innchk)){
+         //  console.log("aama")
+          if(innchk.length >= chklength){
+          //    console.log("yyy")
+              chk = innchk;
+              dupIns[j] = -1;
+          }
+      }
+      
+    }
+    if(Paragraph.indexOf(chk)){
+         insRange.push(Paragraph.indexOf(chk));
+    }
+    else{
+         insRange.push(-1);
+    }
+    // insRange.push(Paragraph.indexOf(chk));
+     longInslength.push(chk)
+    }
+}
+
+console.log(longInslength)
+//console.log(dupIns);
+console.log(insRange);
+//-------------------------------------------*imp*------------------------------------------------------
+//final logic insertion deletion check
+
+for(let m = 0; m < delrange.length ; m++){
+    ispresent = false;
+   
+    for(let n = 0; n < insRange.length ; n++){
+        console.log("ammamamamamammamamamamamaaammamamamama")
+        innerbreak = false;
+        if(delrange[m] == -1)
+        {
+            // uniq deletion
+            ispresent = true;
+            console.log("deletion :", longdellength[m])
+            break;
+        }
+        else{
+            if(delrange[m] == insRange[n] ){//|| delrange[m] == insRange[n]+1 || delrange[m] == insRange[n]+2
+                insRange[n] = "checked";
+                console.log("pair deletion :",longdellength[m] , "pair insertion :", longInslength[n] ,"normal" );
+                ispresent =true;
+                break;
+            }
+            else{
+              for (let h = 0; h < insRange.length;h++)
+              {
+                  if(insRange[h] != "checked" && insRange[h] != -1){
+                      if(Paragraph.includes(`${longInslength[h]}${longdellength[m]}`) || Paragraph.includes(`${longdellength[m]}${longInslength[h]}`)){
+                            console.log(Paragraph.includes(`${longInslength[h]}${longdellength[m]}`) ? (`pair Insertion : ${longInslength[h]}  pair Deletion : ${longdellength[m]} ternarya`) :(`pair Deletion:${longdellength[m]} pair Insertion :${longInslength[h]} ternarys`) );
+                            insRange[h] = "checked";
+                            ispresent = true;
+                           // innerbreak = true;
+                        break;
+                      }
+                       
+                  }
+                  
+               
+              }
+            }
+            // if(innerbreak){
+            //     break;
+            // }
+        }
+    }
+    if(!ispresent){
+        console.log("deletionf :", longdellength[m])
+    }
+
+    console.log("/*/*/*/*/*/*/*/*/**/*/*/*/*/*/")
+    
+}
+//Paragraph = "1212323";
+// del = "3";
+// ins = "2$1";
+//-------------------------------------Final small----------
+
+  for(let g= 0; g < insRange.length ; g++){
+    if(insRange[g] == -1){
+        console.log("insertion :",longInslength[g])
+    }
+    else if(insRange[g] != "checked"){
+         console.log("insertion :", longInslength[g])
+    }
+}  
+
+  console.log(insRange)
+
+
+
