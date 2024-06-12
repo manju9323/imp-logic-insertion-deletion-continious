@@ -1,0 +1,152 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Program
+{
+    public static void Main()
+    {
+        string del = " $ $ $ $ $";
+        string ins = " $ $ $ $ $";
+        string Paragraph = "The synthesis process of FMOMOF, resulting in a PC with a completely different shape than FMOFC, also had a significant impact on the SSA and the porosity (Fig. REF F3 \\h \\* MERGEFORMAT 2C). BET results showed that the SSA of FMOMOF3.3 at 8.9 m2/g was 3.6 times higher than the SSA of FMOFC. The total pore volume and average pore diameter of FMOMOF3.3 were 0.042 cm3/g and 18.9 nm, respectively. In comparison, FMOFC exhibited smaller pores with an average diameter of 14.1 nm and a total pore volume of only 0.015 cm3/g. For pollutant degradation, larger SSA and pore volume benefit both adsorption and photocatalytic processes by increasing the number of surficial active sites and reducing photocharge transport distances in the PC, thus accelerating the generation of reactive radicals [64]. Based on these observations, the multilayered collapsed morphology of FMOMOF appears to be more suitable for organic pollutant removal than FMOFC.";
+
+        string[] splitedIns = ins.Split('$');
+        string[] splitedDel = del.Split('$');
+        List<string> dupDel = new List<string>();
+        List<string> dupIns = new List<string>();
+        List<string> longdellength = new List<string>();
+        List<string> longInslength = new List<string>();
+        List<int> delrange = new List<int>();
+        List<int> insRange = new List<int>();
+
+        for (int i = 0; i < splitedDel.Length; i++)
+        {
+            string chk = splitedDel[i];
+            string chklength = "";
+            if (!dupDel.Contains(i.ToString()))
+            {
+                if (Paragraph.Contains(chk))
+                {
+                    chklength = chk.Length.ToString();
+                }
+                string innchk = "";
+                for (int j = i; j < splitedDel.Length; j++)
+                {
+                    innchk += splitedDel[j];
+                    if (Paragraph.Contains(innchk))
+                    {
+                        if (innchk.Length >= chk.Length)
+                        {
+                            chk = innchk;
+                            dupDel.Add(j.ToString());
+                        }
+                    }
+                }
+                if (Paragraph.IndexOf(chk) != -1)
+                {
+                    delrange.Add(Paragraph.IndexOf(chk) + chk.Length);
+                }
+                else
+                {
+                    delrange.Add(-1);
+                }
+
+                longdellength.Add(chk);
+            }
+        }
+
+        for (int i = 0; i < splitedIns.Length; i++)
+        {
+            string chk = splitedIns[i];
+            string chklength = "";
+            if (!dupIns.Contains(i.ToString()))
+            {
+                if (Paragraph.Contains(chk))
+                {
+                    chklength = chk.Length.ToString();
+                }
+                string innchk = "";
+                for (int j = i; j < splitedIns.Length; j++)
+                {
+                    innchk += splitedIns[j];
+                    if (Paragraph.Contains(innchk))
+                    {
+                        if (innchk.Length >= chk.Length)
+                        {
+                            chk = innchk;
+                            dupIns.Add(j.ToString());
+                        }
+                    }
+                }
+                if (Paragraph.IndexOf(chk) != -1)
+                {
+                    insRange.Add(Paragraph.IndexOf(chk));
+                }
+                else
+                {
+                    insRange.Add(-1);
+                }
+
+                longInslength.Add(chk);
+            }
+        }
+
+        for (int m = 0; m < delrange.Count; m++)
+        {
+            bool ispresent = false;
+
+            for (int n = 0; n < insRange.Count; n++)
+            {
+                bool innerbreak = false;
+                if (delrange[m] == -1)
+                {
+                    ispresent = true;
+                    Console.WriteLine("deletion: " + longdellength[m]);
+                    break;
+                }
+                else
+                {
+                    if (delrange[m] == insRange[n])
+                    {
+                        insRange[n] = -2; // "checked"
+                        Console.WriteLine("pair deletion: " + longdellength[m] + " pair insertion: " + longInslength[n] + " normal");
+                        ispresent = true;
+                        break;
+                    }
+                    else
+                    {
+                        for (int h = 0; h < insRange.Count; h++)
+                        {
+                            if (insRange[h] != -2 && insRange[h] != -1)
+                            {
+                                if (Paragraph.Contains(longInslength[h] + longdellength[m]) || Paragraph.Contains(longdellength[m] + longInslength[h]))
+                                {
+                                    Console.WriteLine(Paragraph.Contains(longInslength[h] + longdellength[m]) ? ($"pair Insertion: {longInslength[h]} pair Deletion: {longdellength[m]} ternarya") : ($"pair Deletion: {longdellength[m]} pair Insertion: {longInslength[h]} ternarys"));
+                                    insRange[h] = -2; // "checked"
+                                    ispresent = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!ispresent)
+            {
+                Console.WriteLine("deletionf: " + longdellength[m]);
+            }
+
+            Console.WriteLine("/*/*/*/*/*/*/*/*/**/*/*/*/*/*/");
+        }
+
+        for (int g = 0; g < insRange.Count; g++)
+        {
+            if (insRange[g] == -1 || insRange[g] != -2)
+            {
+                Console.WriteLine("insertion: " + longInslength[g]);
+            }
+        }
+
+        Console.WriteLine(string.Join(", ", insRange));
+    }
+}
