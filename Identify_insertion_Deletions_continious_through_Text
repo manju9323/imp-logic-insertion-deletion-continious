@@ -1,0 +1,139 @@
+ins = "";
+
+del = "*Corresponding authors: $ HYPERLINK \"mailto:tzhang@whut.edu.cn\" $tzhang@whut.edu.cn$,$";
+Paragraph = "*Corresponding authors:  HYPERLINK \"mailto:tzhang@whut.edu.cn\" tzhang@whut.edu.cn,Tremblaya,b,c,* pierluct@whut.edu.cn, Tian Zhanga,b,c,d,e,** tzhang@whut.edu.cn";
+
+splitedIns = ins.split("$");
+splitedDel = del.split("$");
+dupDel = [];
+dupIns = [];
+
+console.log(splitedIns);
+console.log(splitedDel);
+
+//first we check deletion
+//answer
+longdellength = [];
+longInslength = [];
+// find del range
+delrange =[];
+insRange = [];
+
+if(splitedDel.length >= 1){
+for(let i = 0; i < splitedDel.length; i++){
+    chk = splitedDel[i];
+    chklength = "";
+    if(dupDel[i] != -1){
+        if(chk.includes(Paragraph))
+        {
+            chklength = chk.length;
+        }
+    innchk = "";
+    for(let j = i; j < splitedDel.length;j++){
+      innchk += splitedDel[j];
+      //console.log(innchk,"innschk")
+      if(Paragraph.includes(innchk)){
+         //  console.log("aama")
+          if(innchk.length >= chklength){
+          //    console.log("yyy")
+              chk = innchk;
+              dupDel[j] = -1;
+          }
+      }
+      
+    }
+    if(Paragraph.indexOf(chk) != -1){
+         delrange.push(Paragraph.indexOf(chk)+chk.length);
+    }
+    else{
+         delrange.push(-1);
+    }
+    
+     longdellength.push(chk)
+    }
+}
+console.log(longdellength)
+//console.log(dupDel);
+console.log(delrange);
+}
+
+if(splitedIns.length >= 1){
+
+for(let i = 0; i < splitedIns.length; i++){
+    chk = splitedIns[i];
+    chklength = "";
+    if(dupIns[i] != -1){
+        if(chk.includes(Paragraph))
+        {
+            chklength = chk.length;
+        }
+    innchk = "";
+    for(let j = i; j < splitedIns.length;j++){
+      innchk += splitedIns[j];
+      //console.log(innchk,"innschk")
+      if(Paragraph.includes(innchk)){
+         //  console.log("aama")
+          if(innchk.length >= chklength){
+          //    console.log("yyy")
+              chk = innchk;
+              dupIns[j] = -1;
+          }
+      }
+      
+    }
+    if(Paragraph.indexOf(chk)){
+         insRange.push(Paragraph.indexOf(chk));
+    }
+    else{
+         insRange.push(-1);
+    }
+    // insRange.push(Paragraph.indexOf(chk));
+     longInslength.push(chk)
+    }
+}
+
+console.log(longInslength)
+//console.log(dupIns);
+console.log(insRange);
+}
+//final logic insertion deletion check
+
+for(let m = 0; m < delrange.length ; m++){
+    ispresent = false;
+    for(let n = 0; n < insRange.length ; n++){
+        
+        if(delrange[m] == -1)
+        {
+            // uniq deletion
+            ispresent = true;
+            console.log("deletion :", longdellength[m])
+            break;
+        }
+        else{
+            if(delrange[m] == insRange[n] || delrange[m] == insRange[n]+1 ){
+                insRange[n] = "checked";
+                console.log("pair deletion :",longdellength[m] , "pair insertion :", longInslength[n] );
+                ispresent =true;
+            }
+        }
+    }
+    if(!ispresent){
+        console.log("deletion :", longdellength[m])
+    }
+}
+
+if(insRange.length >= 1){
+  for(let g= 0; g < insRange.length ; g++){
+    if(insRange[g] == -1){
+        console.log("insertion :",longInslength[g])
+    }
+    else if(insRange[g] != "checked"){
+         console.log("insertion :", longInslength[g])
+    }
+}  
+}
+
+  console.log(insRange)
+
+
+
